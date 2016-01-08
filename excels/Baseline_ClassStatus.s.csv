@@ -1,0 +1,8 @@
+"TestCase","Key Word","Argument 1"
+,"loadSahi","C:/sahi_pro/userdata/scripts/12Twenty/12TwentyKeyword.sah"
+,"loadSahi","12TwentyData.sah"
+,"loadSahi","12TwentyOR.sah"
+"[Global]","[TearDown]"
+
+"My First Testcase","[Documentation]","My testcase description. Modify as needed"
+,"Baseline"

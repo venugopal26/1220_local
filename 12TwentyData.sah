@@ -1,0 +1,68 @@
+//File which has data values
+//Site Access
+$sUrlTexas_Law="http://law-texas.admin.data-12twenty.com";
+$sOhio_State_BSBA="http://bsba-fisher-osu.admin.data-12twenty.com";
+$sTexas_FTMBA="http://mba-mccombs-texas.admin.data-12twenty.com";
+$sHarvard_FTMBA="http://mba-business-harvard.admin.data-12twenty.com";
+$sUCLA_Law="http://law-ucla.admin.data-12twenty.com";
+$sColumbia_Centralized="http://columbia.admin.data-12twenty.com";
+$sUNC_Centralized="http://unc.admin.data-12twenty.com";
+$sFordham_Centralized="http://fordham.admin.data-12twenty.com";
+$sTexas_PTMBA="http://wp-mccombs-texas.admin.data-12twenty.com";
+//Login Credentials
+$sUsername="dataqa@12twenty.com";
+$sPassword="wfcs923$23Wag";
+$sRun_Status="Run status";
+//Suite Data
+$sData_MBA="MBA Standard Reports";
+$sData_BWR="Business Week Report";
+$sData_NACE="NACE Report";
+$sData_NALP="NALP Report";
+$sData_ABA="ABA Report";
+$sData_CS="Class Status";
+//Excel data 
+$sRunStatus="Y";
+$sMBA_Site_Type="MBA Standard Reports (12)";
+$sSite_Texas_FTMBA="Texas_FTMBA";
+$sSite_Texas_PTMBA="Texas_PTMBA";
+$sSite_Harvard_FTMBA="Harvard_FTMBA";
+$sReport_Compensation="Compensation Report";
+$sBWR_Site_Type="Business Week Report (10)";
+$sSubReport_BWR1="Forgone Salary";
+$sSubReport_BWR2="Top 15 Employers";
+$sSubReport_BWR3="Internships";
+$sSubReport_BWR4="Overall Employment";
+$sSubReport_BWR5="Base Salary, Signing Bonus, & Other Guaranteed Compensation";
+$sNACE_Site_Type="NACE Report (7)";
+$sSite_Fordham="Fordham_Centralized";
+$sPro="Business";
+$sSearch_Nace="buss";
+$sColl="FC AT ROSE HILL";
+$sNALP_Site_Type="NALP Report (16)";
+$sABA_Site_Type="ABA Report (4)";
+$Site_Texas_Law="Texas_Law";
+$sDate="Without";
+$sCS_FTMBA_Site_Type="FTMBA";
+$sCS_BSBA_Site_Type="BSBA";
+$sCS_LAW_Site_Type="Law";
+$sCS_CENTRALIZED_Site_Type="Centralized";
+$sCS_Site_OhioState="Ohio_State_BSBA";
+$sCS_Site_UCLA="UCLA_Law";
+$sCS_Site_CC="Columbia_Centralized";
+$sCS_Site_UNC="UNC_Centralized";
+$sCS_Subreport="Internship";
+//Path of the csv files
+//$sTestData_File="C:\\sahi_pro\\userdata\\scripts\\12Twenty\\excels\\Data_QA_TestCases.xlsx";
+$path_datafile ="C:\\sahiprov610\\userdata\\scripts\\12twenty\\excels\\Data_QA_Tests.xlsx";
+//Baseline path for files
+$path_baseline ="D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No\\";
+//Baseline directory
+$sBaseline_dir="D:\\Allworkspace\\12TwentyReport\\Baseline/Build_No";
+//Actual path for files
+$path_actual="D:\\Allworkspace\\12TwentyReport\\Actual\\Build_No\\";
+//Actual directory
+$sAcual_dir="D:\\Allworkspace\\12TwentyReport\\Actual/Build_No";
+//Temporary files path
+$path_temp="D:\\Allworkspace\\Temporary\\Temp_";
+//Temporary directory
+$sTemp_dir ="D:\\Allworkspace\\Temporary";

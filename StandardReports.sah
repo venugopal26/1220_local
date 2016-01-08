@@ -1,0 +1,814 @@
+_include("12TwentyData.sah");
+_include("12TwentyOR.sah");
+    
+       //Read Filter data from Excel Sheet
+    var $data;
+    var $sSite ;
+  	var $sGradYear;
+	var $sGradTerm;
+	var $sOfferTiming ;
+	var $sJobPhase;
+    var $sWorkAuth;
+	var $sEmpType;
+    var $sRumorJob;
+	var $sIncludeRoport;
+    var $sDegreelevel;
+	var $sCollege;
+    var $sDepartment;
+    var $sProgram;
+	var $sUndergradMajor;
+    var $TestFail=0;
+    var  $sRunStatus;
+    var  $sSiteType;
+    var $sSubReport;
+    var $DatafileName;
+    var $sReportName;
+    var $sCutoffDate;
+    //table data
+    var $Tabledata = [];
+    var $Tabledata1 = [];
+  	var $arr = [];
+    //data verify
+    var $actual=[];
+    var $expected=[];
+    
+/******************* Login ***********************/
+function login12Twenty($Url, $Username, $Password){
+    //navigate url
+	_navigateTo($Url);
+   //Enter Username
+	_setValue(_emailbox($txt_UserName), $Username);
+   //Enter Password
+	_setValue(_password($txt_Password), $Password);
+  //Click LOgin
+	_click(_link("Log in"));
+}
+/*********************Read Filter Data From Excel ***************************/
+				
+function readFilterData($k,$sReportName)
+{
+  $data = _readExcelFile($path_datafile,$sReportName);
+  //_log(_count($data.length));
+  $sRunStatus = $data[$k]["Run status"];
+  $sSiteType = $data[$k]["Site Instance Type"];
+  $sSite = $data[$k]["Site Instance"];
+  $sGradYear = $data[$k]["Grad Class"];
+  $sGradTerm = $data[$k]["Grad Term"];
+  $sOfferTiming = $data[$k]["Offer Timing"];
+  $sJobPhase = $data[$k]["Job Phase"];
+  $sJointDegree = $data[$k]["Joint Degree"];
+  $sReportingMajor = $data[$k]["Desired Industry /Employment Type"];
+  $sCutoffDate = $data[$k]["Include Rumor Jobs"];
+  $sIncludeRoport = $data[$k]["Included in Reporting"];
+  $sDegreelevel = $data[$k]["Degree Level"];
+  $sCollege = $data[$k]["College / School"];
+  $sProgram = $data[$k]["Program"];
+ $sUndergradMajor= $data[$k]["Undergrad Major"];
+  $sCutoffDate = $data[$k]["Cutoff Date"];
+  $sSubReport = $data[$k]["Sub Report"];
+  $DatafileName = $data[$k]["DataFileName"];  
+}
+
+/*******************Baseline Reoprts******************/
+				/*********MBA Standard Reports Baseline*********/
+
+function MBA_Baseline($path,$stest)
+{
+  //read Excel data file 
+  var $data1=_readExcelFile($path,$stest);
+  
+  //continue the script execution if failure occurs
+  _continueOnError();    
+//for(var $loop=0;$loop<$data1.length;$loop++) 
+  for(var $loop=50;$loop<52;$loop++) 
+ {
+  //read filter data  
+  readFilterData($loop,$stest); 
+          //Condition for Runstatus
+          if($sRunStatus=="Y") 
+          {       
+                  //check site instance type  
+                   if($sSiteType=="MBA Standard Reports (12)") 
+                   {       
+                           //check site instance
+                            if($sSite=="Texas_FTMBA")
+                           {   
+                            //login 
+                           login12Twenty($sTexas_FTMBA,$sUsername,$sPassword);
+                           }
+                           else if($sSite=="Texas_PTMBA")
+                           {
+                            //login
+                            login12Twenty($sTexas_PTMBA,$sUsername,$sPassword);
+                             _log("Login to texas mba"+$loop);
+                           } 
+                           else
+                           {
+                             //login 
+                             login12Twenty($sHarvard_FTMBA,$sUsername,$sPassword);
+                           } 
+                            //navigate to MBA Reports
+                            navigationToStandardReport();
+                             //click on MBA Reports	
+                              _click(_link($tab_mba_report));
+                            //click on subreport type
+                    		_click(_link($link_generate, _near(_cell($sSubReport))));
+                            //select filte values
+                            selectFilterValuesMBA_Standard_Reports();
+                   }
+            		else
+                   {
+                   			_log("Excel data finish");
+                   } 
+          }
+   		 else
+         {
+             _log("RunStatus N");
+          }        
+           if($sSubReport !="Compensation Report" )
+        {  
+        		//write table data in to csv
+ 				  WriteToCSV();  
+        } 
+         else  
+         {    
+                //Write Into MBA Compensation Report 
+        		 WriteIntoMBA_Compensation_Report();     
+         }
+ //logout  
+ logout12Twenty();
+  }    
+ }
+ 
+		/*********Business Week Baseline*********/
+function BusinessWeek_Baseline($path,$stest)
+{  
+  //read excel data file
+  var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+    _continueOnError();    
+
+    //for(var $loop=0;$loop<$data1.length;$loop++) 
+ for(var $loop=4;$loop<6;$loop++) 
+     {
+       //read filter data
+      readFilterData($loop,$stest); 
+              //condition for run status
+              if($sRunStatus=="Y") 
+              {      
+                       //check site instance type 
+                       if($sSiteType=="Business Week Report (10)") 
+                       {       //condition for site instance 
+                                if($sSite=="Texas_FTMBA")
+                               {   //login
+                               		login12Twenty($sTexas_FTMBA,$sUsername,$sPassword);
+                               } 
+                               else
+                               {//login
+                                 login12Twenty($sHarvard_FTMBA,$sUsername,$sPassword);
+                               } 
+                                //navigation to business week reports
+                                navigationToStandardReport();
+                                //click on BWR reports 
+                                _click(_link($tab_bwr_report));	
+                                //click on subreport generate type
+                                _click(_link($link_generate, _near(_cell($sSubReport))));
+                                //select filter data
+                                selectFilterValuesBusiness_Week_Reports();
+                       }
+                        else
+                       {
+                                _log("Excel data finish");
+                       } 
+              }
+             else
+             {
+                 _log("RunStatus N");
+             } 
+           //write into csv file   
+           WriteToCSV(); 
+          if($sSubReport="Overall Employment" | $sSubReport="Base Salary, Signing Bonus, & Other Guaranteed Compensation")
+          {
+     		//write list data in csv file  
+     		writeBWR_List(); 
+           }else { 
+       		//write into csv of salary table(Q.83-Q.87)
+       		   WriteToCSV_BWR_Salary();
+        }  
+       //logout
+     logout12Twenty();
+    }
+}
+/*****************NACE Baseline*******************/
+function NaceReports_Baseline($path,$stest)
+{    //read excel data file
+	  var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+    _continueOnError();    
+
+    // for(var $loop=0;$loop<$data1.length;$loop++) 
+      for(var $loop=0;$loop<2;$loop++) 
+  
+     {      
+       		readFilterData($loop , $stest);
+            //check the condition 
+            if($sRunStatus=="Y") 
+          	{   //check the site instance type
+                 if($sSite=="Fordham_Centralized")
+               { 
+               //login   
+               login12Twenty($sFordham_Centralized,$sUsername,$sPassword);
+               }
+               else
+               {
+                 //login
+                login12Twenty($sColumbia_Centralized,$sUsername,$sPassword);
+               } 
+               //navigation to nalp reports
+               navigationToStandardReport();
+               _click(_link($tab_nace_report));
+               //click on generate report
+               _click(_link($link_generate, _near(_cell($sSubReport))));    
+               //select filter data
+               selectFilterValuesNace_Reports();
+               //write into csv
+               WriteToCSV(); 
+               //logout
+               logout12Twenty();
+         	 }  
+        }
+ }
+/****************NALP BaseLine****************/
+function NALP_Baseline($path,$stest)
+{  //read excel data file
+  	var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+    _continueOnError();    
+    //for(var $loop=0;$loop<$data1.length;$loop++) 
+   for(var $loop=0;$loop<2;$loop++) 
+
+     {
+      readFilterData($loop,$stest); 
+              //check the runstatus
+              if($sRunStatus=="Y") 
+              {       //condition for site instance type 
+                       if($sSiteType=="NALP Report (16)") 
+                       {       //condition to site instance
+                                if($sSite=="UCLA_Law")
+                               {   //login
+                               		login12Twenty($sUCLA_Law,$sUsername,$sPassword);
+                               } 
+                               else
+                               {
+                                 _log("Not Logged In");
+                               } 
+                                //navigation to nalp reports
+                                navigationToStandardReport();
+                                _click(_link($tab_Nalp_Report));                         
+                                //click on subreport type
+                                _click(_link($link_generate, _near(_cell($sSubReport))));
+                                // select filter data
+                                selectFilterValuesNALP_Reports();
+                       }
+                        else
+                       {
+                                _log("Excel data finish");
+                       } 
+              }
+             else
+             {
+                 _log("RunStatus N");
+             }   
+     //write into csv  
+     WriteToCSV(); 
+     //logout   
+     logout12Twenty();
+    }
+}
+/*********ABA Report Baseline*********/
+function ABA_Baseline($path,$stest)
+{  //read excel datafile
+    var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+    _continueOnError();    
+    //for(var $loop=0;$loop<$data1.length;$loop++) 
+    for(var $loop=0;$loop<2;$loop++) 
+     {//read filter data
+      readFilterData($loop,$stest); 
+              if($sRunStatus=="Y") 
+              {        //check site instance type 
+                       if($sSiteType=="ABA Report (4)") 
+                       {       //check site instance
+                                if($sSite=="Texas_Law")
+                               {   //login to 12twenty
+                               		login12Twenty($sUrlTexas_Law,$sUsername,$sPassword);
+                               } 
+                               else
+                               {
+                                	_log("No Action");
+                               } 
+                                //navigation to aba report
+                                navigationToStandardReport();
+                                 _click(_link($tab_Aba_Report));
+                                 //click on subreport generate link
+                                _click(_link($link_generate, _near(_cell($sSubReport))));
+                                //select filter data
+                                selectFilterValuesABA_Reports();
+                       }
+                        else
+                       {
+                                _log("Excel data finish");
+                       } 
+              }
+             else
+             {
+                 _log("RunStatus N");
+             }        
+     //write base line results in csv   
+     WriteToCSV(); 
+     logout12Twenty();
+    }
+}
+/*******************MBA Actual Reports******************/
+
+function MBA_Actual($path,$stest)
+{
+   //read excel data file
+  var $data1=_readExcelFile($path,$stest);
+  //continue the script execution if failure occurs
+      _continueOnError();    
+  
+   //for(var $loop=0;$loop<$data1.length;$loop++) 
+     for(var $loop=50;$loop<52;$loop++) 
+       
+   {           
+                //get filter data
+                readFilterData($loop,$stest); 
+                if($sRunStatus=="Y") 
+              {  
+                 //check the condition
+                 if($sSite=="Texas_FTMBA")
+                  {   
+                    //login 
+                    login12Twenty($sTexas_FTMBA,$sUsername,$sPassword);
+                  }
+                  else if($sSite=="Texas_PTMBA")
+                 {
+                    //login
+                    login12Twenty($sTexas_PTMBA,$sUsername,$sPassword);
+                 } 
+                 else
+                 {
+                    //login
+                    login12Twenty($sHarvard_FTMBA,$sUsername,$sPassword);
+                 }
+              
+                 //navigation to standard report
+                 navigationToStandardReport(); 
+                 //click on MBA Reports	
+                 _click(_link($tab_mba_report));
+                 //click on sub report type
+                 _click(_link($link_generate, _near(_cell($sSubReport))));
+                 //select filter values
+                 selectFilterValuesMBA_Standard_Reports();
+     			if($sSubReport !="Compensation Report"){
+                       //read excel data and verify
+                          readFromCSVAndVerify() ;                     
+    		 }
+             else{
+                        //verify compensation report
+                         WriteTempReport();
+                         verifyCSVFiles();
+              }
+                 //logout                
+                 logout12Twenty();
+           }else
+            {
+              	_log("fail");
+            }       
+    }             
+}
+/**********************BWR Actual***********************/
+function BusinessWeek_Actual($path,$stest)
+{
+ 
+   var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+      _continueOnError();    
+
+   //for(var $loop=0;$loop<$data1.length;$loop++) 
+     for(var $loop=4;$loop<6;$loop++) 
+
+   {
+                readFilterData($loop,$stest); 
+                if($sRunStatus=="Y") 
+              {  
+                 if($sSite=="Texas_FTMBA")
+                  {   
+                    login12Twenty($sTexas_FTMBA,$sUsername,$sPassword);
+                  }                 
+                 else
+                 {
+                    login12Twenty($sHarvard_FTMBA,$sUsername,$sPassword);
+                 }
+              
+                 navigationToStandardReport();
+                 //click on BWR reports 
+                 _click(_link($tab_bwr_report));
+                 _click(_link($link_generate, _near(_cell($sSubReport))));
+                 selectFilterValuesBusiness_Week_Reports();
+                 //verify 45,79,90
+                 //readFromCSVAndVerify() ; 
+                  //verify question 83-87
+                  //readAndVerify_BWR_Salary();
+                 //verfiy 75,80
+                   //write into temp file
+                     BWR_Temp();
+                  //verify temp file and actual
+                  verifyCSVFiles();
+                 logout12Twenty();
+           }else{
+              	_log("failed1");
+              }       
+                
+                
+    }             
+}
+/********************NACE Actual***********************/
+function NaceReports_Actual($path,$stest)
+{
+    //continue the script execution if failure occurs
+          _continueOnError();    
+       //for(var $loop=0;$loop<$data1.length;$loop++) 
+	     for(var $loop=0;$loop<2;$loop++) 
+
+       {  
+               readFilterData($loop , $stest);
+               if($sRunStatus=="Y") 
+              {
+                     if($sSite=="Fordham_Centralized")
+                   {   
+                   login12Twenty($sFordham_Centralized,$sUsername,$sPassword);
+                   }
+                   else
+                   {
+                    login12Twenty($sColumbia_Centralized,$sUsername,$sPassword);
+                   } 
+               navigationToStandardReport();
+               _click(_link($tab_nace_report));                
+               _click(_link($link_generate, _near(_cell($sSubReport))));    
+               selectFilterValuesNace_Reports();
+               readFromCSVAndVerify(); 
+               logout12Twenty();
+              }else{
+              	_log("fail");
+              }  
+        }
+ }
+/*******************NALP Actual Reports******************/
+function NALP_Actual($path,$stest)
+{
+   var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+      _continueOnError();    
+  // for(var $loop=0;$loop<$data1.length;$loop++) 
+     for(var $loop=0;$loop<2;$loop++) 
+
+   {
+                readFilterData($loop,$stest); 
+               if($sRunStatus=="Y") 
+              {  
+                 if($sSite=="UCLA_Law")
+                  {   
+                    login12Twenty($sUCLA_Law,$sUsername,$sPassword);
+                  }
+                  else 
+                 {
+                    _log("Not Logged In");
+                 } 
+              
+                                  
+                 navigationToStandardReport(); 
+                 _click(_link($tab_Nalp_Report));                
+                 _click(_link($link_generate, _near(_cell($sSubReport))));
+                 selectFilterValuesNALP_Reports();
+                 readFromCSVAndVerify() ; 
+                 logout12Twenty();
+             }else{
+              	_log("failed2");
+              }     
+    }             
+}
+/****************ABA Actual***************/
+function ABA_Actual($path,$stest)
+{
+   var $data1=_readExcelFile($path,$stest);
+    //continue the script execution if failure occurs
+      _continueOnError();    
+   for(var $loop=0;$loop<2;$loop++) 
+   //for(var $loop=0;$loop<$data1.length;$loop++) 
+   {           //read filter data   
+                readFilterData($loop,$stest); 
+             if($sRunStatus=="Y") 
+              {  
+                 if($sSite=="Texas_Law")
+                  {   
+                    //login to 12Twenty 
+                    login12Twenty($sUrlTexas_Law,$sUsername,$sPassword);
+                  }
+                  else 
+                 {
+                    _log("Not Logged In");
+                 }
+              
+                
+                 //navigate ABA reports              
+                 navigationToStandardReport();
+                 _click(_link($tab_Aba_Report));
+                  //click on subreport generate 
+                 _click(_link($link_generate, _near(_cell($sSubReport))));
+                 //read filter data
+                 selectFilterValuesABA_Reports();
+                 //read and verify baseline and actual 
+                 readFromCSVAndVerify() ; 
+                 //logout
+                 logout12Twenty();
+             }else{
+              	_log("failed4");
+              }    
+                
+    }             
+}
+/******* Navigation To MBA Standard Reports***********/
+function navigationToStandardReport()
+{
+	_click(_link($link_Report));
+	_click(_link($tab_Standard_Report));	
+}
+function selectFilterValuesMBA_Standard_Reports()
+{
+	_setSelected(_select($gradYearId), $sGradYear);
+	_setSelected(_select($gradTerm), $sGradTerm);
+	_log("Site instance:"+$sSite);
+    if($sSite=="Texas_PTMBA")
+    {
+      _setSelected(_select($programId), $sProgram);
+      _log("ProgramId:"+$sProgram);
+    }
+
+    if($sSite != "Texas_PTMBA" )
+    {
+        _setSelected(_select($job_PhaseId),$sJobPhase);
+
+        _setSelected(_select($drpdwn_jointDegree), $sJointDegree);
+    }
+
+    _click(_submit($generateReport));
+}
+  /******* Navigation To Business Week Reports***********/
+function selectFilterValuesBusiness_Week_Reports()
+{
+	_setSelected(_select($gradYearId), $sGradYear);
+	_setSelected(_select($gradTerm), $sGradTerm);	
+    _click(_submit($generateReport));
+}
+/********************Navigation To NALP  *************************/
+function selectFilterValuesNALP_Reports()
+{
+	_setSelected(_select($gradYearId), $sGradYear);
+	_setSelected(_select($gradTerm), $sGradTerm);
+    _setSelected(_select($drpdwn_offertiming), $sOfferTiming);
+   
+    _click(_submit($generateReport));
+}
+/*******************Navigation to NACE***********************/
+
+function  selectFilterValuesNace_Reports()
+{
+  _setSelected(_select($gradYearId), $sGradYear);
+_setSelected(_select($gradTerm), $sGradTerm);
+  
+  if($sProgram=="Business")
+  {
+    _click(_button($departmentAll));
+    _setValue(_textbox($txt_departSearch), "buss");
+    _check(_checkbox($sProgram));
+  }
+
+  if($sCollege=="FC AT ROSE HILL")
+  { 
+    _click(_button($btn_all));
+    _check(_checkbox($sCollege));
+  }
+_setSelected(_select($degreeId),  $sDegreelevel);
+_check(_radio($sReportingMajor));
+_click(_submit($generateReport));
+}
+
+function  selectFilterValuesBWR_Reports()
+{
+_setSelected(_select($gradYearId), $sGradYear);
+_setSelected(_select($gradTerm), $sGradTerm);
+_click(_submit($generateReport));
+}
+ /******* Navigation To ABA Reports***********/
+
+function selectFilterValuesABA_Reports()
+{
+	_setSelected(_select($gradYearId), $sGradYear);
+	_setSelected(_select($gradTerm), $sGradTerm);
+    _setSelected(_select($drpdwn_offertiming), $sOfferTiming);
+      if($sCutoffDate == "Without")
+      {
+        _setValue(_textbox($txtbox_cutoffdate), "");
+      }
+   _click(_submit($generateReport));
+}
+/*********************Log Out***************************/
+function logout12Twenty(){
+	_click(_span($logout_icon));
+	_click(_link($btn_Logout));
+}
+
+/***************************Write to CSV*******************************/
+function WriteToCSV(){
+	//read data from app    	
+    _log("Enter");
+    //get table content from ui
+	$Tabledata = _getTableContents(_table($table_id));
+    //push data into array
+    for (var $row = 0; $row < $Tabledata.length; $row++) {
+      	$arr[$arr.length] = $Tabledata[$row];
+    }
+    //write functionality
+     Write();  	   	
+}
+  /***************Write Functionality******************/
+// write ui data into csv file
+  function Write(){  
+      if(_exists("D:\\Allworkspace\\12twenyReport\\Baseline\\Build_No"))
+      {
+        _log("Enter1");
+       //write in to csv file
+      _writeCSVFile($Tabledata,$path_baseline+$DatafileName+".csv");
+      }
+      else
+      {
+         //create a directory and write in to csv file
+	     var $file = new java.io.File("D:\\Allworkspace\\12TwentyReport\\Baseline/Build_No").mkdir();
+        _writeCSVFile($Tabledata,$path_baseline+$DatafileName+".csv");
+      }
+  }   
+/******************************Assertion Functionality***********************************/
+//read data from ui and verify with csv
+function readFromCSVAndVerify(){
+      
+    //get data from ui
+	$actual = _getTableContents(_table($table_id));
+    //get data from csv
+	$expected =_readCSVFile("D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No\\"+$DatafileName+".csv", "," );
+    //verify functionality 
+    Verify();
+}
+/**************Verify Functionality**********************/
+//verify functionality
+function Verify(){  
+	for (var $i=0; $i<$actual.length && $i<$expected.length; $i++){
+			for (var $j=0; $j<$actual[$i].length && $j<$expected[$i].length; $j++)
+	        {
+				if($actual[$i][$j]==$expected[$i][$j])
+	            {
+	              _log("Expected: " + $expected[$i][$j]+"Actual "+$actual[$i][$j]);
+			     }
+	          else
+	            {
+                  
+                  if(_fileExists("D:\\Allworkspace\\12TwentyReport\\Actual\\Build_No\\"+$DatafileName+".csv"))
+                  {
+                     //update data if error occurs
+                     updateOnError($i,$j,$actual[$i][$j], $expected[$i][$j]);
+                  }
+                  else
+                  {
+                      var $file = new java.io.File("D:\\Allworkspace\\12TwentyReport\\Actual/Build_No").mkdir();
+                      _copyFile("D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No\\"+$DatafileName+".csv", "D:\\Allworkspace\\12TwentyReport\\Actual\\Build_No\\"+$DatafileName+".csv");
+                    //  $TestFail=$TestFail+1;
+                   // _writeCSVFile($TestFail,"D:\\Allworkspace\\12twenyActual\\FailedTestCase.csv",true);
+                    updateOnError($i,$j,$actual[$i][$j], $expected[$i][$j]);
+                   _assertEqual($actual[$i][$j],$expected[$i][$j]);
+                  }
+	              _log("Verificaton failed :=Expected data in failed test case " + $expected[$i][$j]+"Actual "+$actual[$i][$j]);
+	           }
+             // _assertEqual($actual[$i][$j],$expected[$i][$j]);
+	              _log("Expected: " + $expected[$i][$j]+"Actual "+$actual[$i][$j]);  
+	    }
+	}
+}
+/**********Update on Error***************/
+//update csv if data varied
+function updateOnError($x,$y,$actualData,$expectedData)
+{
+ var $a=_readCSVFile("D:\\Allworkspace\\12TwentyReport\\Actual\\Build_No\\"+$DatafileName+".csv");
+  $a[$x][$y] = $actualData+"***"+$expectedData;
+  _writeCSVFile($a,"D:\\Allworkspace\\12TwentyReport\\Actual\\Build_No\\"+$DatafileName+".csv",true);
+  
+}
+/**********On Script Failure***************/
+//continue the verify functionality if failure error occured
+function onScriptFailure($e)
+{
+   //_logExceptionAsFailure($e);
+   _log("Script failing for Report:"+$DatafileName+".csv");
+   return true; // Forces Sahi to continue execution and not stop at error. Since Sahi Pro V4.3
+}
+/********************WriteToCSV MBA Reports(compensation reports)*************************/
+var $table_id1 = "report-data-";
+//write mba standard reports into csv
+function WriteIntoMBA_Compensation_Report(){      
+      //fetch no.of tables
+        var $tableCount=_count("_table","/report-data/");
+         _log($tableCount)
+             for(var $k=0;$k<$tableCount;$k++){   
+               var $tableIndex=$k+1;
+                //get table data
+               $Tabledata = _getTableContents(_table($table_id1+$tableIndex));
+               for (var $row = 0; $row < $Tabledata.length; $row++) {
+                 $arr[$arr.length] = $Tabledata[$row];
+               }
+               //write into csv 
+               Write();                                                                      
+             }          
+}
+/***************************Verify MBA Compensation Reports(compensation reports)**********************************/
+//write into temporary file
+function WriteTempReport(){
+       //fetch no.of tables
+        var $tableCount=_count("_table","/report-data/");
+         _log($tableCount)
+            for(var $k=0;$k<$tableCount;$k++){   
+                var $tableIndex=$k+1;                 
+                $Tabledata1 = _getTableContents(_table($table_id1+$tableIndex));
+                for (var $row = 0; $row < $Tabledata1.length; $row++) {
+                  $arr[$arr.length] = $Tabledata1[$row];
+                }
+                _log($Tabledata1) ;
+                if(_exists("D:\\Allworkspace\\Temporary"))
+                {
+                  _log("Enter1");
+                  _writeCSVFile($Tabledata1,"D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv");
+                }
+                else
+                {
+                  var $file = new java.io.File("D:\\Allworkspace\\Temporary").mkdir();
+                  _writeCSVFile($Tabledata1,"D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv");
+                }                                                         
+        }           
+}
+/********************************Read and verify MBA(Compensation) and BWR(List) results**************************/
+//read and verify MBA table data
+function verifyCSVFiles(){ 
+    //get data from temporary file
+	$actual = _readCSVFile("D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv", "," );
+    //get data from baseine csv file
+	$expected =_readCSVFile("D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No\\"+$DatafileName+".csv", "," );
+    //verify data
+    Verify();
+  //delete temporary files	
+  if(_exists("D:\\Allworkspace\\Temporary")){
+  		_deleteFile("D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv");
+  }
+}
+
+/************************Write into BWR reports diff table ids(83-87)******************************/
+
+function WriteToCSV_BWR_Salary(){	   	                 
+        $Tabledata = _getTableContents(_table($table_id2));
+        for (var $row = 0; $row < $Tabledata.length; $row++) {
+          $arr[$arr.length] = $Tabledata[$row];
+        }
+        Write();
+}
+/******************Verify BWR Reports(83-87)*******************/
+function readAndVerify_BWR_Salary(){
+  
+    $actual = _getTableContents(_table($table_id2));      
+	$expected =_readCSVFile("D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No\\"+$DatafileName+".csv", "," );
+    Verify();	
+}
+/**************Get BWR(Q.75,Q.80) List Data****************/
+function writeBWR_List(){
+     //var $listdata = [];
+     var $listdata=_collectAttributes("_listItem","/.*/","sahiText",_in(_list($list_data))); 
+      _log($listdata.length);    
+     _writeCSVFile([$listdata],"D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No\\"+$DatafileName+".csv");
+}
+/**************************write bwr(Q.75,Q.80)into temp file**************************/
+function BWR_Temp(){
+  	var $contents = [];
+	$contents = _getTableContents(_table($table_id));
+    _log($contents.length);
+   	_writeCSVFile($contents, "D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv");  
+   
+    var $listdata=_collectAttributes("_listItem","/.*/","sahiText",_in(_list($list_data))); 
+    _writeCSVFile([$listdata], "D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv");
+}
