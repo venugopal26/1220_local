@@ -1,9 +1,13 @@
+/***************************************
+	FileName	:	12TwentyKeyword.sah
+	Description	 :   Global Variables,Testcase Functions 
+ 
+***************************************/
 //File which has all Functionalites 
 //Include 12Twenty Data File
-_include("12TwentyData.sah");
+_include("12TwentyConfig.sah");
 //Include 12Twenty Object Repository File
 _include("12TwentyOR.sah");
-    
     //Read Filter data from Excel Sheet
     //Global Variables
     var $data;
@@ -22,8 +26,8 @@ _include("12TwentyOR.sah");
     var $sProgram;
 	var $sUndergradMajor;
     var $TestFail=0;
-    var  $sRunStatus;
-    var  $sSiteType;
+    var $sRunStatus;
+    var $sSiteType;
     var $sSubReport;
     var $DatafileName;
     var $sReportName;
@@ -32,17 +36,18 @@ _include("12TwentyOR.sah");
     var $Tabledata = [];
     var $Tabledata1 = [];
   	var $arr = [];
+	var $array=[];
     //data verify
     var $actual=[];
     var $expected=[];
 /******************* Login ***********************/
-/*
+/**********************************************
     Method name	 :  login12Twenty
     Author 	 	     :	sarita	
     Created Date  :  12/14/2015
     Description		:	This method is used to launch URL & login to 12Twenty POrtal .
     Input			  :   URL, UserName,Password
-*/
+**********************************************/
 
 //Login to 12twenty
 function login12Twenty($Url, $Username, $Password)
@@ -57,65 +62,65 @@ function login12Twenty($Url, $Username, $Password)
 	_click(_link("Log in"));
 }
 /*********************Read Filter Data From Excel ***************************/
-/*
+/**********************************************
     Method name	 :  readFilterData
     Author 	 	     :	sarita
     Created Date  :   12/14/2015
     Description		:	This method is used to read filterdata .
     Input			  :   test case number,Report Name
-*/
+**********************************************/
 //read filter data				
 function readFilterData($k,$sReportName)
 {
   //read data file and pass the arguments path of the data file and report name
   $data = _readExcelFile($path_datafile,$sReportName);
   //read the run status
-  $sRunStatus = $data[$k]["Run status"];
+  $sRunStatus = $data[$k][$sdRunStat];
   //read the site instance type
-  $sSiteType = $data[$k]["Site Instance Type"];
+  $sSiteType = $data[$k][$sdSiteType];
   //read site instance
-  $sSite = $data[$k]["Site Instance"];
+  $sSite = $data[$k][$sdSiteInstanceType];
   //read graduation year
-  $sGradYear = $data[$k]["Grad Class"];
+  $sGradYear = $data[$k][$sdGraduationClass];
   //rad graduation term
-  $sGradTerm = $data[$k]["Grad Term"];
+  $sGradTerm = $data[$k][$sdGraduationTerm];
   //read the offertiming
-  $sOfferTiming = $data[$k]["Offer Timing"];
+  $sOfferTiming = $data[$k][$sdOfferTime];
   //read job phase data
-  $sJobPhase = $data[$k]["Job Phase"];
+  $sJobPhase = $data[$k][$sdJobPhase];
   //read joint degree
-  $sJointDegree = $data[$k]["Joint Degree"];
+  $sJointDegree = $data[$k][$sdJointDegree];
   //read reporting major 
-  $sReportingMajor = $data[$k]["Reporting Major"];
+  $sReportingMajor = $data[$k][$sdReportMajor];
   //get cutoff date from data file
-  $sRumorJob = $data[$k]["Include Rumor Jobs"];
+  $sRumorJob = $data[$k][$sdIncRumorJob];
   //red include report name
-  $sIncludeRoport = $data[$k]["Included in Reporting"];
+  $sIncludeRoport = $data[$k][$sdIncReporting];
   //read degree level id
-  $sDegreelevel = $data[$k]["Degree Level"];
+  $sDegreelevel = $data[$k][$sdDegreeLevel];
   //read college or school data
-  $sCollege = $data[$k]["College / School"];
+  $sCollege = $data[$k][$sdSc_Coll];
   //read program
-  $sProgram = $data[$k]["Program"];
+  $sProgram = $data[$k][$sdPro];
   //get the under grad major from excel data
- $sUndergradMajor= $data[$k]["Undergrad Major"];
+ $sUndergradMajor= $data[$k][$sdUndGrdMajor];
   //read cutoff date 
-  $sCutoffDate = $data[$k]["Cutoff Date"];
+  $sCutoffDate = $data[$k][$sdCutDate];
   //read subreport name
-  $sSubReport = $data[$k]["Sub Report"];
+  $sSubReport = $data[$k][$sdSubRepo];
   //read datafile name
-  $DatafileName = $data[$k]["DataFileName"];  
+  $DatafileName = $data[$k][$sdDataFile];  
 }
 
 /*******************Baseline Reoprts******************/
-					/*************MBA Standard Reports*************/
-/*
+/*************MBA Standard Reports*******************/
+/**********************************************
     Method name	 :  MBA_Baseline
     Author 	 	     :	venu
     Created Date  :  12/21/15
     Description		:	This method is used to Explore Baseline MBA Standard Reports  .
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //MBA Standard Reports Baseline
 function MBA_Baseline($path,$stest)
 {
@@ -123,14 +128,14 @@ function MBA_Baseline($path,$stest)
   var $data1=_readExcelFile($path,$stest);
   
   //continue the script execution if failure occurs
-  _continueOnError();    
- //for(var $loop=0;$loop<$data1.length;$loop++) 
-  for(var $loop=6;$loop<9;$loop++) 
+  _continueOnError();   
+  //for(var $loop=50;$loop<52;$loop++) 
+  for(var $loop=0;$loop<$data1.length;$loop++) 
  {
   //read filter data  
   readFilterData($loop,$stest); 
           //Condition for Runstatus
-          if($sRunStatus==$sRunStatus) 
+          if($sRunStatus==$sRunStatusValue) 
           {       _log("RunStatus Y");
                   //check site instance type  
                    if($sSiteType==$sMBA_Site_Type) 
@@ -161,41 +166,52 @@ function MBA_Baseline($path,$stest)
                             //select filte values
                             selectFilterValuesMBA_Standard_Reports();
                              //condition for subreport
-                     	 	if($sSubReport ==$sReport_Compensation)
-        					{  						  
-                              	//Write Into CSV(MBA Compensation Report )
-                              	WriteIntoMBA_Compensation_Report();                                                    
-                         	} 
-                        	else  
-                         	{   
-                              //write UI data into CSV
-                               WriteToCSV();  
-                            }
+                     		//_log("Actu-"+$sSubReport);
+                      		//_log("Report:"+$sReport_Com);
+                     	 	if(_areEqual($sSubReport,$sReport_Com))
+        					{  
+                              	   _log("Sub Report:"+$sSubReport+"");	
+                              		//Write Into CSV(MBA Compensation Report )
+                              		WriteIntoMBA_Compensation_Report();                           	   
+                              		                                     
+                         	}                        	
+                           else
+                           {                             			
+                                 _log("Sub Report:"+$sSubReport);
+                                 _log("Report:"+$sReport_Com);
+                                 _log("False");  
+                                 //write UI data into CSV
+                                 WriteToCSV();                                 			   
+                           }
+                            
                             //logout  
                             logout12Twenty();
-                     	   _log("MBA Standard Report Baseline Task -Passed"+$loop); 
+                     	   _log($sMBA_Baseline1+$loop); 
                    }
             		else
                    {
-                     		_log("MBA Standard Report Baseline Task -Failed"+$loop); 
+                     		_log($sMBA_Baseline2+$loop); 
                    } 
             
           }
    		 else
          {
              _log("RunStatus N");
-          }                
-  	}    
- }
- 
-		/*********Business Week Baseline*********/
-/*
+          }
+   	
+	$sSubReport = "";
+  	_log("Before For loop - $sSubReport "+ $sSubReport);
+  	
+ 	}   
+  }
+ 		/*********Business Week Baseline*********/
+/**********************************************
     Method name	:  BusinessWeek_Baseline
     Author 	 	     :	venu
     Created Date  :  12/22/15
     Description		:	This method is used to Explore Baseline Business Week Reports  .
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //Business week baseline reports
 function BusinessWeek_Baseline($path,$stest)
 {  
@@ -205,12 +221,12 @@ function BusinessWeek_Baseline($path,$stest)
     _continueOnError();    
 
     for(var $loop=0;$loop<$data1.length;$loop++) 
- 	//for(var $loop=36;$loop<37;$loop++) 
+ 	 //for(var $loop=36;$loop<40;$loop++) 
      {
        //read filter data
       	readFilterData($loop,$stest); 
               //condition for run status
-              if($sRunStatus==$sRunStatus) 
+              if($sRunStatus==$sRunStatusValue) 
               {      
                         _log("RunStatus Y");
                        //check site instance type 
@@ -233,10 +249,17 @@ function BusinessWeek_Baseline($path,$stest)
                                 //select filter data
                                 selectFilterValuesBusiness_Week_Reports();
                         		 //condition to Subreport
-                                if($sSubReport==$sSubReport_BWR1||$sSubReport==$sSubReport_BWR2||$sSubReport==$sSubReport_BWR3)
+                                if($sSubReport==$sSubReport_BWR1)
                                 {
                                   	//write into CSV file   
            		 					WriteToCSV();                                                              
+                                }
+                         		else if($sSubReport==$sSubReport_BWR2){
+                                  		Write_BWR1();                                  		                             		
+                                }
+                         		else if($sSubReport==$sSubReport_BWR3)
+                                {
+                                		Write_BWR2();
                                 }
                                else if($sSubReport==$sSubReport_BWR4||$sSubReport==$sSubReport_BWR5)
                                {
@@ -251,11 +274,11 @@ function BusinessWeek_Baseline($path,$stest)
                                 }  
                                 //logout
                                 logout12Twenty();
-                               _log("Business Week Baseline Task-Passed"+$loop);
+                               _log($sBWR_Baseline1+$loop);
                        }
                         else
                        {
-                                _log("Business Week Baseline Task-Failed"+$loop);
+                                _log($sBWR_Baseline2+$loop);
                        } 
                  
           }
@@ -266,13 +289,13 @@ function BusinessWeek_Baseline($path,$stest)
     }//close for loop
 }//close function
 /*****************NACE Baseline*******************/
-/*
+/**********************************************
     Method name	 :  NaceReports_Baseline
     Author 	 	     :	sarita
     Created Date  :   12/15/2015
     Description		:	This method is used to Explore Baseline NACE Reports  .
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //Nace Reports Baseline
 function NaceReports_Baseline($path,$stest)
 {    //read excel data file
@@ -286,7 +309,7 @@ function NaceReports_Baseline($path,$stest)
             //read filter data
        		readFilterData($loop , $stest);
             //check the run status 
-            if($sRunStatus==$sRunStatus) 
+            if($sRunStatus==$sRunStatusValue) 
           	{  
                _log("RunStatus Y");
               	//check site instance type
@@ -315,11 +338,11 @@ function NaceReports_Baseline($path,$stest)
                    WriteToCSV(); 
                    //logout
                    logout12Twenty();
-                   _log("NACE Baseline Task-Passed "+$loop);
+                   _log($sNACE_Baseline1+$loop);
                }
                else
                {
-                   _log("NACE Baseline Task-Failed"+$loop);
+                   _log($sNACE_Baseline2+$loop);
                } 
          }
          else
@@ -330,13 +353,13 @@ function NaceReports_Baseline($path,$stest)
  }//close function
 
 /****************NALP BaseLine****************/
-/*
+/**********************************************
     Method name	:  NALP_Baseline
     Author 	 	    :	12/15/2015
     Created Date  :  venu
     Description		:	This method is used to Explore Baseline NALP Reports .
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //NALP Reports Baseline
 function NALP_Baseline($path,$stest)
 {  //read excel data file
@@ -349,7 +372,7 @@ function NALP_Baseline($path,$stest)
       //read filter data  
       readFilterData($loop,$stest); 
               //check the runstatus
-              if($sRunStatus==$sRunStatus) 
+              if($sRunStatus==$sRunStatusValue) 
               {       //condition for site instance type 
                        if($sSiteType==$sNALP_Site_Type) 
                        {       //condition to site instance
@@ -373,11 +396,11 @@ function NALP_Baseline($path,$stest)
                                   WriteToCSV(); 
                                  //logout   
                                  logout12Twenty();
-                         		_log("NALP Baseline Task-Passed"+$loop);
+                         		_log($sNALP_Baseline1+$loop);
                        }
                         else
                        {
-                                _log("NALP Baseline Task-Failed"+$loop);
+                                _log($sNALP_Baseline2+$loop);
                        } 
                
               }
@@ -388,13 +411,13 @@ function NALP_Baseline($path,$stest)
     }//close for loop
 }//close function
 /*********ABA Baseline*********/
-/*
+/**********************************************
     Method name	:  ABA_Baseline
     Author 	 	    :	venu
     Created Date  :  12/15/15
     Description		:	This method is used to Explore Baseline ABA Reports .
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //ABA Reports Baseline
 function ABA_Baseline($path,$stest)
 {  //read excel datafile
@@ -406,7 +429,7 @@ function ABA_Baseline($path,$stest)
     {	//read filter data
       	 readFilterData($loop,$stest); 
               //check run status
-              if($sRunStatus==$sRunStatus) 
+              if($sRunStatus==$sRunStatusValue) 
               {        //check site instance type 
                        if($sSiteType==$sABA_Site_Type) 
                        {       //check site instance
@@ -430,11 +453,11 @@ function ABA_Baseline($path,$stest)
                                	WriteToCSV(); 
                                	//logout from 12twenty
                                	logout12Twenty();
-                         		_log("ABA Baseline Task-Passed"+$loop);
+                         		_log($sABA_Baseline1+$loop);
                        }
                         else
                        {
-                                _log("ABA Baseline Task-Failed"+$loop);
+                                _log($sABA_Baseline2+$loop);
                        }
                 
                 }
@@ -446,13 +469,13 @@ function ABA_Baseline($path,$stest)
     }
 }
 /***************Class Status Baseline********************/
-/*
+/**********************************************
     Method name	:  ClassStatus_Baseline
     Author 	 	    :	sarita
     Created Date  :  12/14/2015
     Description		:	This method is used to Explore Class Status Baseline Reports .
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 function ClassStatus_Baseline($path,$stest)
 {
   	//read excel datafile
@@ -460,12 +483,14 @@ function ClassStatus_Baseline($path,$stest)
     //continue the script execution if failure occurs
     _continueOnError();  
         for(var $loop=0;$loop<$data1.length;$loop++) 
-   	    //for(var $loop=41;$loop<43;$loop++) 
+   	    //for(var $loop=49;$loop<50;$loop++) 
         { 
+          //_log("No.of Rows:"+$data1.length);
          	//read filter dat
      		 readFilterData($loop,$stest); 
+                    //_log("Datafile:"+$DatafileName);
             //check Runstatus
-            if($sRunStatus==$sRunStatus) 
+            if($sRunStatus==$sRunStatusValue) 
             {   //condition for site instance type
                  if($sSiteType==$sCS_FTMBA_Site_Type) 
                  {   //condition for site instance
@@ -524,33 +549,30 @@ function ClassStatus_Baseline($path,$stest)
                        //select centralizd filter values 
                        selectFilterValuesCentralized();
                   }
-                   else
-                  {
-                    _log("Excel data finish");
-                  }
+                  
              //write into csv 
              WriteToCSV(); 
              //logout 12twenty 
              logout12Twenty();
                //log for if test is passed
-              _log("Class Status Baseline Task-Passed"+$loop);
+              _log($sCS_Baseline1+$loop);
             }
             else
             {
                //log for if test is failed
-               _log("Class Status Baseline Task-Failed"+$loop);
+               _log($CS_Baseline2+$loop);
             }    
        }//close for loop
 }//close function
 
 /*******************MBA Actual Reports******************/
-/*
+/**********************************************
     Method name	:  MBA_Actual
     Author 	 	    :	venu
     Created Date  :  12/21/15
     Description		:	This method is used to Explore Actual MBA Standard Reports.
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //MBA Actual Reports
 function MBA_Actual($path,$stest)
 {
@@ -565,7 +587,7 @@ function MBA_Actual($path,$stest)
              //get filter data
               readFilterData($loop,$stest); 
              //check the run status
-    		 if($sRunStatus==$sRunStatus) {
+    		 if($sRunStatus==$sRunStatusValue) {
                	_log("Run Status Y");
                //check site jinstance type
                if($sSiteType==$sMBA_Site_Type) 
@@ -595,23 +617,22 @@ function MBA_Actual($path,$stest)
                  _click(_link($link_generate, _near(_cell($sSubReport))));
                  //select filter values
                  selectFilterValuesMBA_Standard_Reports();
-     			 if($sSubReport =="Compensation Report "){
+     			 if(_areEqual($sSubReport,$sReport_Com)){
                           	//verify compensation report
                               WriteTempReport();
                               verifyCSVFiles();                   
                  }
-                 else{
-                           
+                 else{                          
                    		//read excel data and verify
                           readFromCSVAndVerify() ;
                   }
                      //logout                
                      logout12Twenty();
-                 _log("MBA Standard Report Actual Task-Passed"+$loop);
+                 _log($MBA_Actual1+$loop);
            }
            else
             {
-                 _log("MBA Standard Report Actual Task-Failed"+$loop);
+                 _log($MBA_Actual2+$loop);
             }
         }else
         {
@@ -620,13 +641,13 @@ function MBA_Actual($path,$stest)
     }//close for loop             
 }//close function
 /**********************BWR Actual***********************/
-/*
+/**********************************************
     Method name	:  BusinessWeek_Actual
     Author 	 	    :	venu
     Created Date  :  12/22/2015
     Description		:	This method is used to Explore Actual Business Week Reports.
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //BWR Actual Reports
 function BusinessWeek_Actual($path,$stest)
 {
@@ -635,12 +656,12 @@ function BusinessWeek_Actual($path,$stest)
     //continue the script execution if failure occurs
      _continueOnError();    
      for(var $loop=0;$loop<$data1.length;$loop++) 
-     //for(var $loop=4;$loop<7;$loop++) 
+     //for(var $loop=36;$loop<40;$loop++) 
      { 
 				//read filter data     
                 readFilterData($loop,$stest); 
                 //check run status  
-                if($sRunStatus==$sRunStatus) 
+                if($sRunStatus==$sRunStatusValue) 
                {  
                      //check site instance type 
                      if($sSiteType==$sBWR_Site_Type) 
@@ -665,11 +686,23 @@ function BusinessWeek_Actual($path,$stest)
                      _click(_link($link_generate, _near(_cell($sSubReport))));
                      //select filter values
                       selectFilterValuesBusiness_Week_Reports();
-                      if($sSubReport ==$sSubReport_BWR1||$sSubReport ==$sSubReport_BWR2||$sSubReport ==$sSubReport_BWR3)
+                       if($sSubReport ==$sSubReport_BWR1)
                       { 
                           //verify 45,79,90
-                          readFromCSVAndVerify() ; 
-                      } else if($sSubReport==$sSubReport_BWR4 || $sSubReport ==$sSubReport_BWR5){
+                          readFromCSVAndVerify(); 
+                      }
+                       else if($sSubReport ==$sSubReport_BWR2)
+                       {
+                         	Write_BWR1_Temp();
+                           	verifyCSVFiles();
+                       }
+                       else if($sSubReport ==$sSubReport_BWR3)
+                       {
+                         	Write_BWR2_Temp();
+                         	verifyCSVFiles();
+                       }
+                       else if($sSubReport==$sSubReport_BWR4 || $sSubReport ==$sSubReport_BWR5)
+                       {
                          //verfiy 75,80
                          //write into temp file
                           BWR_Temp();
@@ -681,11 +714,11 @@ function BusinessWeek_Actual($path,$stest)
                       }                                           
                     //logout
                      logout12Twenty();
-                     _log("Business Week Actual Task-Passed"+$loop);  
+                     _log($sBWR_Actual1+$loop);  
                 }
                 else
                 {
-                    _log("Business Week Actual Task-Failed"+$loop);  
+                    _log($sBWR_Actual2+$loop);  
                 } 
           }else
           {		//run status failed
@@ -694,13 +727,13 @@ function BusinessWeek_Actual($path,$stest)
     }//close for loop             
 }//close function
 /********************NACE Actual***********************/
-/*
+/**********************************************
     Method name	:  NaceReports_Actual
     Author 	 	    :	sarita
     Created Date  :  12/15/2015
     Description		:	This method is used to Explore Actual NACE Reports.
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 function NaceReports_Actual($path,$stest)
 {
      //read excel data file
@@ -713,7 +746,7 @@ function NaceReports_Actual($path,$stest)
         {  	  //read filter data	       
                readFilterData($loop , $stest);
                //check run status
-               if($sRunStatus==$sRunStatus) 
+               if($sRunStatus==$sRunStatusValue) 
               {
                   //check site instance type
                   if($sSiteType=="NACE Report (7)") 
@@ -741,10 +774,10 @@ function NaceReports_Actual($path,$stest)
                readFromCSVAndVerify(); 
                //logout 12twenty 
                logout12Twenty();
-               _log("NACE Actual Task-Passed"+$loop);     
+               _log($sNACE_Actual1+$loop);     
               }else
               {
-              	_log("NACE Actual Task-Failed"+$loop);
+              	_log($sNACE_Actual2+$loop);
               }
           }
           else
@@ -754,13 +787,13 @@ function NaceReports_Actual($path,$stest)
       }//close for loop
  }//close function
 /*******************NALP Actual Reports******************/
-/*
+/**********************************************
     Method name	:  NALP_Actual
     Author 	 	     :	venu
     Created Date  :   12/15/2015
     Description		:	This method is used to Explore Actual NALP Reports.
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //NALP Actual Reports
 function NALP_Actual($path,$stest)
 {
@@ -773,7 +806,7 @@ function NALP_Actual($path,$stest)
    	{		   //read filter data	
                 readFilterData($loop,$stest); 
                //check run status
-               if($sRunStatus==$sRunStatus) 
+               if($sRunStatus==$sRunStatusValue) 
               {  
                     //condition for site instance type 
                     if($sSiteType==$sNALP_Site_Type) 
@@ -800,11 +833,11 @@ function NALP_Actual($path,$stest)
                      readFromCSVAndVerify() ; 
                      //logout
                      logout12Twenty();
-                      _log("NALP Actual Task-Passed"+$loop);
+                      _log($sNALP_Actual1+$loop);
                   }
                   else
                   {
-                    _log("NALP Actual Task-Failed"+$loop);
+                    _log($sNALP_Actual2+$loop);
                   }
             }
           	else
@@ -814,13 +847,13 @@ function NALP_Actual($path,$stest)
     }//close for loop             
 }//close function
 /****************ABA Actual***************/
-/*
+/**********************************************
     Method name	 :  ABA_Actual
     Author 	 	     :	venu
     Created Date  :  12/15/2015
     Description		:	This method is used to Explore Actual ABA Reports.
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 //ABA Actual Reports
 function ABA_Actual($path,$stest)
 { 
@@ -833,7 +866,7 @@ function ABA_Actual($path,$stest)
    {           //read filter data   
                 readFilterData($loop,$stest); 
       			//check run status
-               if($sRunStatus==$sRunStatus) 
+               if($sRunStatus==$sRunStatusValue) 
                 {  
                       //check site instance type 
                       if($sSiteType==$sABA_Site_Type) 
@@ -860,9 +893,9 @@ function ABA_Actual($path,$stest)
                          readFromCSVAndVerify() ; 
                          //logout
                          logout12Twenty();
-                        _log("ABA Actual Task-Passed"+$loop);
+                        _log($sABA_Actual1+$loop);
                  }else{
-                    _log("ABA Actual Task-Failed"+$loop);
+                    _log($sABA_Actual2+$loop);
                   }
              }else{
                  _log("Runstatus N");
@@ -870,13 +903,13 @@ function ABA_Actual($path,$stest)
     }             
 }
 /*************Class Status Actual**************/
-/*
+/**********************************************
     Method name	 :  ClassStatus_Actual
     Author 	 	     :	sarita
     Created Date  :  12/15/2015
     Description		:	This method is used to Explore Actual Class Status Reports.
     Input			  :   Excel file path,Report Name
-*/
+**********************************************/
 function ClassStatus_Actual($path,$stest)
 {
   //read excel data
@@ -889,7 +922,7 @@ function ClassStatus_Actual($path,$stest)
 			//read filter data   
             readFilterData($loop,$stest); 
       		//check run status          
-       		if($sRunStatus==$sRunStatus) 
+       		if($sRunStatus==$sRunStatusValue) 
           	{ //check site instance type
                if($sSiteType=="FTMBA") 
                {  //condition to site instance Harvard FTMBA   
@@ -959,23 +992,23 @@ function ClassStatus_Actual($path,$stest)
              readFromCSVAndVerify() ; 
             //Logout      
             logout12Twenty();
-            _log("Class Status Actual Task-Passed"+$loop);      
+            _log($sCS_Actual1+$loop);      
         } 
         else
         {
-          _log("Class Status Actual Task-Failed"+$loop);      
+          _log($sCS_Actual2+$loop);      
          }   
      }//close for loop
 }//close function
 
    /*************Navigate Reports**************/
-/*
+/**********************************************
     Method name	:  navigationToStandardReport
     Author 	 	    :	venu
     Created Date  :   12/15/2015
     Description		:	This method is used to navigate Standard Reports tab.
     Input			  :   NA
-*/
+**********************************************/
 //Navigate to Reports
 function navigationToStandardReport()
 {   
@@ -984,13 +1017,13 @@ function navigationToStandardReport()
     //click on Standard Reports
 	_click(_link($tab_Standard_Report));	
 }
-/*
+/**********************************************
     Method name	:  navigationToClassStatusReport
     Author 	 	    :	sarita
     Created Date  :   12/14/2015
     Description		:	This method is used to navigate Class Status tab.
     Input			  :   NA
-*/
+**********************************************/
 function navigationToClassStatusReport()
 {
   	//click on Report link
@@ -1002,13 +1035,13 @@ function navigationToClassStatusReport()
 }
 
           /**************Select Filter Data*************/
-/*
+/**********************************************
     Method name	:  selectFilterValuesMBA_Standard_Reports
     Author 	 	    :	venu
     Created Date  :  12/21/15
     Description		:	This method is used to get filter data from data file.
     Input			  :   NA
-*/
+**********************************************/
 //get the filter data from Data file
 function selectFilterValuesMBA_Standard_Reports()
 { 	//read Graduataion Year
@@ -1033,13 +1066,13 @@ function selectFilterValuesMBA_Standard_Reports()
 	 //click on Gernerate Report Button
     _click(_submit($generateReport));
 }
-/*
+/**********************************************
     Method name	:  selectFilterValuesBusiness_Week_Reports
     Author 	 	    :	venu
     Created Date  :  12/22/15
     Description		:	This method is used to get filter data from data file.
     Input			  :   NA
-*/
+**********************************************/
 //To Read BWR Data File
 function selectFilterValuesBusiness_Week_Reports()
 { 	//read Graduation Year
@@ -1049,13 +1082,13 @@ function selectFilterValuesBusiness_Week_Reports()
   	//click on Gernerate Report Button
     _click(_submit($generateReport));
 }
-/*
+/**********************************************
     Method name	:  selectFilterValuesNALP_Reports
     Author 	 	    :	venu
     Created Date  :  12/15/15
     Description		:	This method is used to get filter data from data file.
     Input			  :   NA
-*/
+**********************************************/
 //read NALP data file
 function selectFilterValuesNALP_Reports()
 {	//read Graduation year
@@ -1071,13 +1104,13 @@ function selectFilterValuesNALP_Reports()
       }
     _click(_submit($generateReport));*/
 }
-/*
+/**********************************************
     Method name	:  selectFilterValuesNace_Reports
     Author 	 	    :	sarita
     Created Date  :  12/15/15
     Description		:	This method is used to get filter data from data file.
     Input			  :   NA
-*/
+**********************************************/
 //read NACE Filter data file
 function  selectFilterValuesNace_Reports()
 {	//read Graduation Year from data sheet
@@ -1109,13 +1142,13 @@ function  selectFilterValuesNace_Reports()
    //click on generate report button
 	_click(_submit($generateReport));
 }
-/*
+/**********************************************
     Method name	:  selectFilterValuesABA_Reports
     Author 	 	    :	venu
     Created Date  :   12/15/15
     Description		:	This method is used to get filter data from data file.
     Input			  :   NA
-*/
+**********************************************/
 //select ABA reports filter data
 function selectFilterValuesABA_Reports()
 {	//Select Graduation YearId
@@ -1132,13 +1165,13 @@ function selectFilterValuesABA_Reports()
   //click on generate report
    _click(_submit($generateReport));
 }
-/*
+/**********************************************
     Method name	:  SelectFilterValues_ClassStatus
     Author 	 	    :	sarita
     Created Date  :  12/14/15
     Description		:	Select filter data from excel for class status (FTMBA/BSBA/UCLA_LAW)
     Input			  :   NA
-*/
+**********************************************/
   //Select Filter data for ClassStatus Reports
    function SelectFilterValues_ClassStatus()
    {
@@ -1173,13 +1206,13 @@ function selectFilterValuesABA_Reports()
      //click on generate report
     _click(_button($getResult));
   }
-/*
+/**********************************************
     Method name	:  selectFilterValuesCentralized
     Author 	 	    :	sarita
     Created Date  :  12/14/15
     Description		: select filter data from excel for Centralized	class status(Columbia/UNC)
     Input			  :   NA
-*/
+**********************************************/
 function selectFilterValuesCentralized()
 {   //Click on Graduation Year 
    	_click(_button($default_gradYear));
@@ -1221,13 +1254,13 @@ function selectFilterValuesCentralized()
     _click(_button($getResult));
 }
      /************Logout*********/
-/*
+/**********************************************
     Method name	:  logout12Twenty
     Author 	 	    :	sarita
     Created Date  :  12/14/15 
     Description		:	This Method is used to Logout from 12Twenty.
     Input			  :   NA
-*/
+**********************************************/
 //logout from 12twenty application
 function logout12Twenty(){
     //click on icon
@@ -1236,13 +1269,13 @@ function logout12Twenty(){
 	_click(_link($btn_Logout));
 }
 /****************Write,Read and Verify*******************/
-/*
+/**********************************************
     Method name	:  WriteToCSV
     Author 	 	    :	venu
     Created Date  :  12/15/15
     Description		:	This Method is used to get table content from UI,push into array and write into csv.
     Input			  :   NA
-*/
+**********************************************/
 function WriteToCSV(){
 	//read data from app    	
     _log("Enter");
@@ -1257,18 +1290,22 @@ function WriteToCSV(){
     //write functionality
      Write();  	   	
 }
-/*
+/**********************************************
     Method name	:  Write
     Author 	 	    :	sarita
     Created Date  :  12/14/15
     Description		:	This Method is used to write into csv.
     Input			  :   NA
-*/
+**********************************************/
 // write ui data into csv file
   function Write()
  {  
-      if(_exists("D:\\Allworkspace\\12twenyReport\\Baseline\\Build_No"))
-      {
+      if(_exists($path_baseline))
+      {//condition for to check if file exists or not
+        if(_exists($path_baseline+$DatafileName+".csv"))
+        {	//if exists delete file
+        	_deleteFile($path_baseline+$DatafileName+".csv");	
+        }
           	_log("Enter1");
          	//write in to csv file
          	_writeCSVFile($Tabledata,$path_baseline+$DatafileName+".csv");
@@ -1282,18 +1319,24 @@ function WriteToCSV(){
            _log(2);
       }
   }   
-/*
+/**********************************************
     Method name	:  WriteIntoMBA_Compensation_Report
     Author 	 	    :	venu
     Created Date  :  12/21/15
     Description		:	This Method is used to write into MBA Compensation Reports(Baseline).
     Input			  :   NA
-*/
+**********************************************/
 //default table id
 var $table_id1 = "report-data-";
 //write mba standard reports into csv
 function WriteIntoMBA_Compensation_Report()
 {      
+  		if(_exists($path_baseline+$DatafileName+".csv"))
+        {	//if file exists delete the file
+        	_deleteFile($path_baseline+$DatafileName+".csv");	
+        }else{
+        	_log("File is not exist");
+        }
      	 //fetch no.of tables
       	var $tableCount=_count("_table","/report-data/");
       	_log($tableCount)
@@ -1309,17 +1352,38 @@ function WriteIntoMBA_Compensation_Report()
               $arr[$arr.length] = $Tabledata[$row];
           }
           //write into csv 
-          Write();                                                                      
-        }          
+			Write_Compensation();
+        }   
 }
-
-/*
+/**********************************************
+    Method name	:  Write_Compensation
+    Author 	 	    :	venu
+    Created Date  :  01/19/16
+    Description		:	This Method is used to write into MBA Compensation Reports.
+    Input			  :   NA
+**********************************************/
+ function Write_Compensation()
+ {  
+       if(_exists($path_baseline))
+      {       
+          	_log("Enter1");
+         	//write in to csv file
+         	_writeCSVFile($Tabledata,$path_baseline+$DatafileName+".csv");
+      }
+      else
+      {
+           //create a directory and write in to csv file
+           var $file = new java.io.File($sBaseline_dir).mkdir();
+           _writeCSVFile($Tabledata,$path_baseline+$DatafileName+".csv");
+      }
+ }   
+/**********************************************
     Method name	:  readFromCSVAndVerify
     Author 	 	    :	venu
     Created Date  :  12/15/15
     Description		:	This Method is used to get table content from UI,read baseline file and verify.
     Input			  :   NA
-*/
+**********************************************/
 //read data from ui and verify with csv
 function readFromCSVAndVerify(){
       
@@ -1330,13 +1394,13 @@ function readFromCSVAndVerify(){
     //verify functionality 
     Verify();
 }
-/*
+/**********************************************
     Method name	:  Verify
     Author 	 	    :	sarita
     Created Date  :  12/14/15
     Description		:	This Method is used to Verify.
     Input			  :   NA
-*/
+**********************************************/
 //verify functionality
 function Verify(){  
   	//Iterate the loop to verify Actual and Expecetd results base d on rows and columns
@@ -1361,8 +1425,6 @@ function Verify(){
                       var $file = new java.io.File($sAcual_dir).mkdir();
                         //copy source file to destination file
                       _copyFile($path_baseline+$DatafileName+".csv", $path_actual+$DatafileName+".csv");
-                    //  $TestFail=$TestFail+1;
-                   // _writeCSVFile($TestFail,"D:\\Allworkspace\\12twenyActual\\FailedTestCase.csv",true);
                     //update data if any errors occured 
                     updateOnError($i,$j,$actual[$i][$j], $expected[$i][$j]);
                     //compare baseline ,actual if failure occurs to continue call onScriptFailure.
@@ -1375,13 +1437,13 @@ function Verify(){
 	    }
 	}
 }
-/*
+/**********************************************
     Method name	:  updateOnError
     Author 	 	    :	sarita
     Created Date  :  12/15/15
     Description		:	This Method is used to update error data.
     Input			  :   NA
-*/
+**********************************************/
 //update csv if data varied
 function updateOnError($x,$y,$actualData,$expectedData)
 {
@@ -1394,13 +1456,13 @@ function updateOnError($x,$y,$actualData,$expectedData)
   
 }
 
-/*
+/**********************************************
     Method name	:  onScriptFailure
     Author 	 	    :	sarita
     Created Date  :  12/15/15
     Description		:	This Method is used to continue verify data if failure occurs.
     Input			  :   NA
-*/
+**********************************************/
 //continue the verify functionality if failure error occured
 function onScriptFailure($e)
 {
@@ -1410,13 +1472,13 @@ function onScriptFailure($e)
 }
 
 
-/*
+/**********************************************
     Method name	:  WriteTempReport
     Author 	 	    :	venu
     Created Date  :  12/21/15
     Description		:	This Method is used to write MBA Compensation reports into Temporary file to verify with baseline results.
     Input			  :   NA
-*/
+**********************************************/
 //write into temporary file
 function WriteTempReport(){
        //fetch no.of tables
@@ -1451,13 +1513,13 @@ function WriteTempReport(){
         }           
 }
 
-/*
+/**********************************************
     Method name	:  verifyCSVFiles
     Author 	 	    :	venu
     Created Date  :  12/21/15
     Description		:	This Method is used to read MBA Compensation reports actual,expected results from csv and verify.
     Input			  :   NA
-*/
+**********************************************/
 //read and verify MBA table data
 function verifyCSVFiles(){ 
     //get data from temporary file
@@ -1466,10 +1528,7 @@ function verifyCSVFiles(){
 	$expected =_readCSVFile($path_baseline+$DatafileName+".csv", "," );
     //verify data
     Verify();
-  //delete temporary files if exists
-  /*if(_exists("D:\\Allworkspace\\Temporary")){
-  		_deleteFile("D:\\Allworkspace\\Temporary\\Temp_"+$DatafileName+".csv");
-  }*/
+  //delete temporary files if exists  
   // full path of folder inside which we want to delete for files and folders
   var $dir = new java.io.File($sTemp_dir);  
  if ($dir.exists()) 
@@ -1492,13 +1551,13 @@ $dir.delete();
 }
 
 /************************Write into BWR reports diff table ids(83-87)******************************/
-/*
+/**********************************************
     Method name	:  WriteToCSV_BWR_Salary
     Author 	 	    :	venu
     Created Date  :  12/23/15
     Description		:	This Method is used to Write BWR reports into csv from Q.83-Q.87.
     Input			  :   NA
-*/
+**********************************************/
 //Read and write Business Week Report data into CSv
 function WriteToCSV_BWR_Salary(){	   	        
   		//Get the Salary Table Contents
@@ -1511,13 +1570,13 @@ function WriteToCSV_BWR_Salary(){
         Write();
 }
 /******************Verify BWR Reports(83-87)*******************/
-/*
+/**********************************************
     Method name	:  readAndVerify_BWR_Salary
     Author 	 	    :	venu
     Created Date  :  12/23/15
     Description		:	This Method is used to verify BWR reports from Q.83-Q.87.
     Input			  :   NA
-*/
+**********************************************/
 //read BWR_salary reports
 function readAndVerify_BWR_Salary()
 {  //Get table data from UI
@@ -1528,13 +1587,13 @@ function readAndVerify_BWR_Salary()
     Verify();	
 }
 /**************Get BWR(Q.75,Q.80) List Data****************/
-/*
+/**********************************************
     Method name	:  writeBWR_List
     Author 	 	    :	venu
     Created Date  :  12/24/15
     Description		:	This Method is used to write BWR list format reports into csv from Q.75, 77-78,80-82.
     Input			  :   NA
-*/
+**********************************************/
 //Get the Unorderd list data
 function writeBWR_List()
 {
@@ -1546,13 +1605,13 @@ function writeBWR_List()
      _writeCSVFile([$listdata],$path_baseline+$DatafileName+".csv");
 }
 /**************************write bwr(Q.75,Q.80)into temp file**************************/
-/*
+/**********************************************
     Method name	:  BWR_Temp
     Author 	 	    :	Venu
     Created Date  :  12/24/15
     Description		:	This Method is used to write BWR (table & list Q.75, 77-78,80-82) reports into temporary csv.
     Input			  :   NA
-*/
+**********************************************/
 //Write BWR Reports(Q.75/80) into temporary file
 function BWR_Temp()
 {
@@ -1566,4 +1625,156 @@ function BWR_Temp()
     var $listdata=_collectAttributes("_listItem","/.*/","sahiText",_in(_list($list_data))); 
     //append to existing csv file
     _writeCSVFile([$listdata], $path_temp+$DatafileName+".csv");
+}
+/******************************************************/
+/**********************************************
+    Method name	:  Write_BWR1
+    Author 	 	    :	venu
+    Created Date  :  
+    Description		:	write bwr Top 15 employers reports into csv file
+    Input			  :   NA
+**********************************************/
+function Write_BWR1(){
+	// Here we are collecting all listitems
+	var $rows = _collect("_listItem", "/.*/", _in(_list($sList_data)));  
+  	_log("Rows:"+$rows.length);
+  	// creating an array
+  	var $array = new Array($rows.length); 
+    for (var $i = 0; $i < $rows.length; $i++) 
+    {	
+        _log($i);
+      	// extracting value of span from each listitem
+        var $items = _collectAttributes("_span", "/.*/", "sahiText", _in($rows[$i]));
+      	// putting the values of span in an arrya
+        $array[$i] = $items;
+    }
+  	_log($array);
+  if(_fileExists($path_baseline+$DatafileName+".csv"))
+  {
+  		_deleteFile($path_baseline+$DatafileName+".csv");
+  }
+  	// writing into csv file 
+  	_writeCSVFile($array, $path_baseline+$DatafileName+".csv");    
+}
+/**********************************************
+    Method name	:  Write_BWR2
+    Author 	 	    :	venu
+    Created Date  :  
+    Description		:   write bwr interships reports into csv file	
+    Input			  :   NA
+**********************************************/
+function Write_BWR2(){
+  	// Here we are collecting all listitems
+	var $rows = _collect("_listItem", "/.*/", _in(_list($sList_data)));  
+  	// creating an array
+  	 $array = new Array($rows.length); 
+    for (var $i = 0; $i < $rows.length; $i++) 
+   {	
+        _log($i);
+      	// extracting value of span from each listitem
+        var $items = _collectAttributes("_span", "/.*/", "sahiText", _in($rows[$i]));
+      	// putting the values of span in an arrya
+        $array[$i] = $items;
+    }
+  	_log($array);
+   if(_fileExists($path_baseline+$DatafileName+".csv"))
+  {
+  		_deleteFile($path_baseline+$DatafileName+".csv");
+  }
+  	// writing into csv file 
+  	_writeCSVFile($array, $path_baseline+$DatafileName+".csv");     
+     
+     var $rowCount=_fetch(_table($table_id).rows.length);
+    _log("Enter");
+    //push data into array
+  	var $array1=[];
+     $Tabledata = _getTableContents(_table($table_id));
+    for (var $row = 1; $row<$Tabledata.length; $row++) 
+    {
+             $array1[$array1.length] = $Tabledata[$row]; 
+            _log($row+":"+$Tabledata[$row]); 
+         	//_writeCSVFile($array1[$row], $path_baseline+$DatafileName+".csv");
+    }
+   
+      
+   _writeCSVFile($array1, $path_baseline+$DatafileName+".csv");
+       //_writeCSVFile($Tabledata, $path_baseline+$DatafileName+".csv"); 
+}
+/**********************************************
+    Method name	:  Write_BWR1_Temp
+    Author 	 	    :	venu
+    Created Date  :  
+    Description		:	write bwr Top 15 Employers into temporay file
+    Input			  :   NA
+**********************************************/
+function Write_BWR1_Temp(){
+	// Here we are collecting all listitems
+	var $rows = _collect("_listItem", "/.*/", _in(_list($sList_data)));  
+  	_log("Rows:"+$rows.length);
+  	// creating an array
+  	var $array = new Array($rows.length); 
+    for (var $i = 0; $i < $rows.length; $i++) 
+    {	
+        _log($i);
+      	// extracting value of span from each listitem
+        var $items = _collectAttributes("_span", "/.*/", "sahiText", _in($rows[$i]));
+      	// putting the values of span in an arrya
+        $array[$i] = $items;
+    }
+  	_log($array);
+   if(_exists($sTemp_dir))
+                { 
+                  _log("Enter1");
+                  //write Table data into Temporary file 
+  				_writeCSVFile($array, $path_temp+$DatafileName+".csv");    
+                }
+                else
+                {
+                  //Create a Temporary Directory 
+                  var $file = new java.io.File($sTemp_dir).mkdir();
+                   //write into temporary file
+  					_writeCSVFile($array, $path_temp+$DatafileName+".csv");    
+                }                 
+}
+/**********************************************
+    Method name	:  Write_BWR2_Temp
+    Author 	 	    :	venu
+    Created Date  :  
+    Description		:	write bwr interships reports into temporary file
+    Input			  :   NA
+**********************************************/
+function Write_BWR2_Temp(){
+  		// Here we are collecting all listitems
+	var $rows = _collect("_listItem", "/.*/", _in(_list($sList_data)));  
+  	_log("Rows:"+$rows.length);
+  	// creating an array
+  	$array = new Array($rows.length); 
+    for (var $i = 0; $i < $rows.length; $i++) 
+    {	
+        _log($i);
+      	// extracting value of span from each listitem
+        var $items = _collectAttributes("_span", "/.*/", "sahiText", _in($rows[$i]));
+      	// putting the values of span in an arrya
+        $array[$i] = $items;
+    }
+  	_log($array);
+   if(_fileExists($path_baseline+$DatafileName+".csv"))
+  {
+  		_deleteFile($path_baseline+$DatafileName+".csv");
+  }
+  	// writing into csv file 
+    _writeCSVFile($array, $path_temp+$DatafileName+".csv");     
+     var $rowCount=_fetch(_table($table_id).rows.length);
+    _log("Enter");
+    //push data into array
+  	var $array1=[];
+     $Tabledata = _getTableContents(_table($table_id));
+    for (var $row = 1; $row<$Tabledata.length; $row++) 
+    {
+             $array1[$array1.length] = $Tabledata[$row]; 
+            _log($row+":"+$Tabledata[$row]); 
+         	//_writeCSVFile($array1[$row], $path_baseline+$DatafileName+".csv");
+    }
+   _writeCSVFile($array1, $path_temp+$DatafileName+".csv");
+       //_writeCSVFile($Tabledata, $path_baseline+$DatafileName+".csv"); 
 }

@@ -16,7 +16,7 @@
 	
 	<target name="set_properties_chrome" depends="set_timestamp">
     	<property name="scriptDir" value="C:/sahiprov610/userdata/scripts/"/>
-    	<property name="scriptName" value="12twenty/Baseline_suite.s.csv"/>
+    	<property name="scriptName" value="12twenty/12twenty_suite.s.csv"/>
 		<property name="browser" value="chrome"/>
 		<property name="sendemail" value="false"/>
 		<property name="emailtrigger" value="success,failure"/>
@@ -27,9 +27,9 @@
 		<property name="baseURL" value="http://mba-mccombs-texas.admin.data-12twenty.com/"/>
 		<property name="host" value="localhost"/>
 		<property name="port" value="9999"/>
-		<property name="singlesession" value="false"/>
+		<property name="singlesession" value="true"/>
 		<property name="threads" value="5"/>
-		<property name="failedSuiteName" value="Baseline_suite.s.csv"/>
+		<property name="failedSuiteName" value="12twenty_suite.s.csv"/>
 		<property name="failedSuite" value="12twenty/${failedSuiteName}"/>
 	</target>
 
@@ -50,33 +50,19 @@
 			failedSuiteName="${failedSuiteName}"
 			haltonfailure="false"
 			singlesession="${singlesession}"
-			threads="${threads}">
-		</sahi>
-		<antcall target="retryfailedchrome"/>
-	</target>
-
-	<target name="retryfailedchrome" depends="set_properties_chrome" if="sahi.failed.${browser}">
-		<sahi suite="${failedSuite}"
-			browsertype="${browser}"
-			baseurl="${baseURL}"
-			sahihost="${host}"
-			sahiport="${port}"
-			scriptsPathMaster="${scriptDir}"
-			failureproperty="sahi.retry.failed.${browser}"
-			haltonfailure="false"
-			sendemail="${sendemail}"
-	        emailtrigger="${emailtrigger}"
-	        emailproperties="${emailproperties}"
-	       	sendEmailPeriodically="${sendemailperiodically}"
-			sendEmailPeriodicallyTime="${sendemailperiodicallytime}"
-			emailPasswordHidden="${emailPasswordHidden}"
-			singlesession="${singlesession}"
-			threads="1">
+			threads="${threads}"
+			tags="${BuildType}">
+			<!-- Custom fields - add, edit or remove as required -->
+			<customfield key="UserName" value="${UserName}"/>
+			<customfield key="Password" value="${Password}"/>
+			<customfield key="BuildType" value="${BuildType}"/>
+			<customfield key="Baseline_Build_Number" value="${Baseline_Build_Number}"/>
+			<customfield key="Actual_Build_Number" value="${Actual_Build_Number}"/>
 		</sahi>
 		<antcall target="failsahichrome"/>
 	</target>
 
-    <target name="failsahichrome" depends="set_properties_chrome" if="sahi.retry.failed.${browser}">
+    <target name="failsahichrome" depends="set_properties_chrome" if="sahi.failed.${browser}">
         <fail message="Sahi tests failed on browser ${browser}!"/>
     </target>		
 </project>
