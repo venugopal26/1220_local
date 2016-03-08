@@ -4,33 +4,36 @@
  * Copyright Tyto Software Pvt. Ltd.
  */
 -->
-<project name="demo" default="runtestschrome">
+<project name="demo" default="runtestsfirefox">
 	<taskdef name="sahi" classname="net.sf.sahi.ant.RunSahiTask" classpath="lib/ant-sahi.jar"/>
 	
 	<target name="set_timestamp">
         <tstamp>
             <format property="ts" pattern="yyyy_MM_dd__HH_mm_ss" locale="en, IN"/>
         </tstamp>
-	</target>		
-	<target name="set_properties_chrome" depends="set_timestamp">
-    	<property name="scriptDir" value="C:/sahiprov610/userdata/scripts/"/>
-    	<property name="scriptName" value="12twenty/12twenty_suite.s.csv"/>
-		<property name="browser" value="chrome"/>
+	</target>
+	
+	
+	<target name="set_properties_firefox" depends="set_timestamp">
+    	<property name="scriptDir" value="D:/Sahi_pro/userdata/1220_Phase1/"/>
+    	<property name="scriptName" value="suite/12twenty_suite.s.csv"/>
+		<property name="browser" value="firefox"/>
 		<property name="sendemail" value="false"/>
 		<property name="emailtrigger" value="success,failure"/>
-		<property name="emailproperties" value="C:\sahiprov610\userdata\config\email.properties"/>
+		<property name="emailproperties" value="D:\Sahi_pro\userdata\config\email.properties"/>
 		<property name="sendemailperiodically" value="false"/>
 		<property name="sendemailperiodicallytime" value=""/>
 		<property name="emailPasswordHidden" value="true"/>
-		<property name="baseURL" value="http://mba-mccombs-texas.admin.data-12twenty.com/"/>
+		<property name="baseURL" value="http://law-texas.admin.data-12twenty.com"/>
 		<property name="host" value="localhost"/>
 		<property name="port" value="9999"/>
-		<property name="singlesession" value="true"/>
+		<property name="singlesession" value="false"/>
 		<property name="threads" value="5"/>
 		<property name="failedSuiteName" value="12twenty_suite.s.csv"/>
-		<property name="failedSuite" value="12twenty/${failedSuiteName}"/>
+		<property name="failedSuite" value="suite/${failedSuiteName}"/>
 	</target>
-	<target name="runtestschrome" depends="set_properties_chrome">
+
+	<target name="runtestsfirefox" depends="set_properties_firefox">
 		<sahi suite="${scriptName}"
 			browsertype="${browser}"
 			sendemail="${sendemail}"
@@ -49,17 +52,27 @@
 			singlesession="${singlesession}"
 			threads="${threads}"
 			tags="${BuildType}">
-			<!-- Custom fields - add, edit or remove as required -->
+			<report type="simple" logdir="C:/offline/"/>
+			
 			<customfield key="UserName" value="${UserName}"/>
 			<customfield key="Password" value="${Password}"/>
 			<customfield key="BuildType" value="${BuildType}"/>
 			<customfield key="Baseline_Build_Number" value="${Baseline_Build_Number}"/>
 			<customfield key="Actual_Build_Number" value="${Actual_Build_Number}"/>
+			
+			<report type="html" logdir="C:/offline/"/>
 		</sahi>
-		<antcall target="failsahichrome"/>
+		<antcall target="tc-info"/>
+		<antcall target="failsahifirefox"/>
 	</target>
 
-    <target name="failsahichrome" depends="set_properties_chrome" if="sahi.failed.${browser}">
+    <target name="failsahifirefox" depends="set_properties_firefox" if="sahi.failed.${browser}">
         <fail message="Sahi tests failed on browser ${browser}!"/>
-    </target>		
+    </target>	
+	<target name="tc-info" depends="set_properties_firefox">
+        <loadfile property="tc.info" srcFile="C:/offline/index.txt"></loadfile>
+        <echo>Results Link</echo>
+		<echo>http://localhost:9999/_s_/dyn/pro/dbreports</echo>
+		<echo>${tc.info}</echo>		
+	</target>		
 </project>

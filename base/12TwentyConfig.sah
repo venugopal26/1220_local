@@ -80,7 +80,8 @@ $sCS_Site_UNC="UNC_Centralized";
 $sCS_Subreport="Internship";
 $sList_data=5;
 //Path of the csv files
-$path_datafile ="C:/sahiprov610/userdata/12twenty\\excels\\Data_QA_Tests.xlsx";
+//$path_datafile ="C:/sahiprov610/userdata/12twenty\\excels\\Data_QA_Tests.xlsx";
+$path_datafile="D:/Sahi_pro/userdata/1220_Phase1/excels/Data_QA_Tests.xlsx";
 //Baseline path for files
 $path_baseline ="D:\\Allworkspace\\12TwentyReport\\Baseline\\Build_No"+"_"+$sBaselineBuildNumber+"\\";
 //Baseline directory

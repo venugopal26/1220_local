@@ -129,11 +129,14 @@ function MBA_Baseline($path,$stest)
   
   //continue the script execution if failure occurs
   _continueOnError();   
-  //for(var $loop=50;$loop<52;$loop++) 
+  //for(var $loop=0;$loop<1;$loop++) 
   for(var $loop=0;$loop<$data1.length;$loop++) 
  {
   //read filter data  
-  readFilterData($loop,$stest); 
+  readFilterData($loop,$stest);  
+ var $t = _testcase($DatafileName, "MBA Baseline Test");
+ $t.start();
+  
           //Condition for Runstatus
           if($sRunStatus==$sRunStatusValue) 
           {       _log("RunStatus Y");
@@ -160,7 +163,7 @@ function MBA_Baseline($path,$stest)
                             //navigationToMBAStandardReport();
                      		navigationToStandardReport();
                              //click on MBA Reports	
-                              _click(_link($tab_mba_report));
+                             // _click(_link($tab_mba_report));
                             //click on subreport type
                     		_click(_link($link_generate, _near(_cell($sSubReport))));
                             //select filte values
@@ -201,7 +204,7 @@ function MBA_Baseline($path,$stest)
    	
 	$sSubReport = "";
   	_log("Before For loop - $sSubReport "+ $sSubReport);
-  	
+  	$t.end();
  	}   
   }
  		/*********Business Week Baseline*********/
@@ -221,10 +224,12 @@ function BusinessWeek_Baseline($path,$stest)
     _continueOnError();    
 
     for(var $loop=0;$loop<$data1.length;$loop++) 
- 	 //for(var $loop=36;$loop<40;$loop++) 
+ 	 //for(var $loop=36;$loop<37;$loop++) 
      {
-       //read filter data
-      	readFilterData($loop,$stest); 
+     //read filter data
+      readFilterData($loop,$stest);   
+	 var $t = _testcase($DatafileName, "BusinessWeek Baseline Test");
+	 $t.start();       
               //condition for run status
               if($sRunStatus==$sRunStatusValue) 
               {      
@@ -285,7 +290,8 @@ function BusinessWeek_Baseline($path,$stest)
        	 else
        	 {
          	_log("RunStatus N");
-         }           
+         }
+	$t.end();		
     }//close for loop
 }//close function
 /*****************NACE Baseline*******************/
@@ -305,9 +311,11 @@ function NaceReports_Baseline($path,$stest)
 
      for(var $loop=0;$loop<$data1.length;$loop++) 
       //for(var $loop=8;$loop<12;$loop++)  
-     {      
-            //read filter data
-       		readFilterData($loop , $stest);
+     { 
+      //read filter data
+      readFilterData($loop , $stest); 
+	  var $t = _testcase($DatafileName, "NACE Baseline Test");
+	  $t.start();	            
             //check the run status 
             if($sRunStatus==$sRunStatusValue) 
           	{  
@@ -349,6 +357,7 @@ function NaceReports_Baseline($path,$stest)
          {
               _log("RunStatus N");
           }
+	$t.end();	  
     }//close for loop
  }//close function
 
@@ -371,6 +380,8 @@ function NALP_Baseline($path,$stest)
    {
       //read filter data  
       readFilterData($loop,$stest); 
+	  var $t = _testcase($DatafileName, "NALP Baseline Test");
+	  $t.start();      
               //check the runstatus
               if($sRunStatus==$sRunStatusValue) 
               {       //condition for site instance type 
@@ -407,7 +418,8 @@ function NALP_Baseline($path,$stest)
              else
              {
                  _log("RunStatus N");
-             }        
+             } 
+	$t.end();			
     }//close for loop
 }//close function
 /*********ABA Baseline*********/
@@ -426,8 +438,12 @@ function ABA_Baseline($path,$stest)
     _continueOnError();    
     for(var $loop=0;$loop<$data1.length;$loop++) 
     //for(var $loop=0;$loop<2;$loop++) 
-    {	//read filter data
-      	 readFilterData($loop,$stest); 
+    {	
+        //read filter data
+      	readFilterData($loop,$stest);
+		var $t = _testcase($DatafileName, "ABA Baseline Test");
+		$t.start();
+      	_log($DatafileName);		 
               //check run status
               if($sRunStatus==$sRunStatusValue) 
               {        //check site instance type 
@@ -460,12 +476,13 @@ function ABA_Baseline($path,$stest)
                                 _log($sABA_Baseline2+$loop);
                        }
                 
-                }
-             else
-             {
-                 _log("RunStatus N");
-             }        
-     
+			   }
+			   else
+			   {
+				 _log("RunStatus N");
+			   } 
+				
+     $t.end();
     }
 }
 /***************Class Status Baseline********************/
@@ -485,10 +502,12 @@ function ClassStatus_Baseline($path,$stest)
         for(var $loop=0;$loop<$data1.length;$loop++) 
    	    //for(var $loop=49;$loop<50;$loop++) 
         { 
-          //_log("No.of Rows:"+$data1.length);
-         	//read filter dat
-     		 readFilterData($loop,$stest); 
-                    //_log("Datafile:"+$DatafileName);
+         //read filter dat
+     		 readFilterData($loop,$stest);  
+			var $t = _testcase($DatafileName, "Class Status Baseline Test");
+			$t.start();
+          //_log("No.of Rows:"+$data1.length);         	
+          //_log("Datafile:"+$DatafileName);
             //check Runstatus
             if($sRunStatus==$sRunStatusValue) 
             {   //condition for site instance type
@@ -561,7 +580,8 @@ function ClassStatus_Baseline($path,$stest)
             {
                //log for if test is failed
                _log($CS_Baseline2+$loop);
-            }    
+            }
+		$t.end();		
        }//close for loop
 }//close function
 
@@ -579,13 +599,15 @@ function MBA_Actual($path,$stest)
    //read excel data file
   var $data1=_readExcelFile($path,$stest);
   //continue the script execution if failure occurs
-      _continueOnError();    
-  
+      _continueOnError();      
      for(var $loop=0;$loop<$data1.length;$loop++) 
      //for(var $loop=29;$loop<31;$loop++)        
-   	{           
-             //get filter data
-              readFilterData($loop,$stest); 
+   	{ 
+     //get filter data
+     readFilterData($loop,$stest);  
+	var $t = _testcase($DatafileName, "MBA Actual Test");
+	$t.start();	
+             
              //check the run status
     		 if($sRunStatus==$sRunStatusValue) {
                	_log("Run Status Y");
@@ -612,7 +634,7 @@ function MBA_Actual($path,$stest)
                  //navigationToMBAStandardReport(); 
                  navigationToStandardReport();
                  //click on MBA Reports	
-                 _click(_link($tab_mba_report));
+                 //_click(_link($tab_mba_report));
                  //click on sub report type
                  _click(_link($link_generate, _near(_cell($sSubReport))));
                  //select filter values
@@ -637,7 +659,8 @@ function MBA_Actual($path,$stest)
         }else
         {
            _log("Runstatus N");
-         }      
+         } 
+	$t.end();		
     }//close for loop             
 }//close function
 /**********************BWR Actual***********************/
@@ -658,8 +681,11 @@ function BusinessWeek_Actual($path,$stest)
      for(var $loop=0;$loop<$data1.length;$loop++) 
      //for(var $loop=36;$loop<40;$loop++) 
      { 
-				//read filter data     
-                readFilterData($loop,$stest); 
+      //read filter data     
+      readFilterData($loop,$stest);  
+	 var $t = _testcase($DatafileName, "BusinessWeek Actual Test");
+	 $t.start();	
+				
                 //check run status  
                 if($sRunStatus==$sRunStatusValue) 
                {  
@@ -677,7 +703,6 @@ function BusinessWeek_Actual($path,$stest)
                               //login
                               login12Twenty($sHarvard_FTMBA,$sUsername,$sPassword);
                            }
-
                       //navigationToBusinessWeekReport();
                       navigationToStandardReport();
                       //click on BWR reports 
@@ -723,7 +748,8 @@ function BusinessWeek_Actual($path,$stest)
           }else
           {		//run status failed
                  _log("Runstatus N");
-          }                                      
+          } 
+	$t.end();		
     }//close for loop             
 }//close function
 /********************NACE Actual***********************/
@@ -742,9 +768,12 @@ function NaceReports_Actual($path,$stest)
     _continueOnError();    
          for(var $loop=0;$loop<$data1.length;$loop++) 
 	     //for(var $loop=10;$loop<12;$loop++) 
-
-        {  	  //read filter data	       
-               readFilterData($loop , $stest);
+        {  	  
+           //read filter data	       
+            readFilterData($loop , $stest);
+			var $t = _testcase($DatafileName, "NACE Actual Test");
+			$t.start();
+				
                //check run status
                if($sRunStatus==$sRunStatusValue) 
               {
@@ -783,7 +812,8 @@ function NaceReports_Actual($path,$stest)
           else
           {
           		_log("Runstatus N");
-          }  
+          }
+	  $t.end();		
       }//close for loop
  }//close function
 /*******************NALP Actual Reports******************/
@@ -803,8 +833,11 @@ function NALP_Actual($path,$stest)
       _continueOnError();    
      for(var $loop=0;$loop<$data1.length;$loop++) 
      //for(var $loop=0;$loop<2;$loop++) 
-   	{		   //read filter data	
-                readFilterData($loop,$stest); 
+   	{		   
+      //read filter data	
+        readFilterData($loop,$stest); 
+		var $t = _testcase($DatafileName, "NALP Actual Test");
+		$t.start();					
                //check run status
                if($sRunStatus==$sRunStatusValue) 
               {  
@@ -843,7 +876,8 @@ function NALP_Actual($path,$stest)
           	else
             {
            		_log("RunStatus N");   
-            }       
+            }
+	$t.end();			
     }//close for loop             
 }//close function
 /****************ABA Actual***************/
@@ -863,8 +897,11 @@ function ABA_Actual($path,$stest)
     _continueOnError();    
    //for(var $loop=0;$loop<2;$loop++) 
    for(var $loop=0;$loop<$data1.length;$loop++) 
-   {           //read filter data   
-                readFilterData($loop,$stest); 
+   {        
+     	//read filter data   
+        readFilterData($loop,$stest); 
+		var $t = _testcase($DatafileName, "ABA Actual Test");
+		$t.start();			   
       			//check run status
                if($sRunStatus==$sRunStatusValue) 
                 {  
@@ -899,7 +936,8 @@ function ABA_Actual($path,$stest)
                   }
              }else{
                  _log("Runstatus N");
-            }       
+            }
+	$t.end();			
     }             
 }
 /*************Class Status Actual**************/
@@ -919,8 +957,11 @@ function ClassStatus_Actual($path,$stest)
     //for(var $loop=41;$loop<43;$loop++) 
      for(var $loop=0;$loop<$data1.length;$loop++) 
      {
-			//read filter data   
-            readFilterData($loop,$stest); 
+      //read filter data   
+       readFilterData($loop,$stest); 
+	 var $t = _testcase($DatafileName, "Class Status Actual Test");
+	 $t.start();
+			 
       		//check run status          
        		if($sRunStatus==$sRunStatusValue) 
           	{ //check site instance type
@@ -997,7 +1038,8 @@ function ClassStatus_Actual($path,$stest)
         else
         {
           _log($sCS_Actual2+$loop);      
-         }   
+         }
+		$t.end();		
      }//close for loop
 }//close function
 
@@ -1158,10 +1200,10 @@ function selectFilterValuesABA_Reports()
   	//select offertiming from data sheet
     _setSelected(_select($drpdwn_offertiming), $sOfferTiming);
     //condition to select cutoff date
-      if($sCutoffDate == $sDate)
+     /* if($sCutoffDate == $sDate)
       { //select cutoff date 
         _setValue(_textbox($txtbox_cutoffdate), "");
-      }
+      }*/
   //click on generate report
    _click(_submit($generateReport));
 }
